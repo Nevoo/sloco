@@ -6,6 +6,7 @@
 💡 A small CLI Tool to help you with an approach to solve some issues we had with localizations.
 </aside>
 <br>
+<br>
 <aside>
 ❗️ This is currently the bare minimum version which is working for me. Right now this will also propbably not work on Windows.
 </aside>
