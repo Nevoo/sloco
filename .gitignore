@@ -11,3 +11,6 @@ build/
 # Environment
 .env
 lib/env/env.g.dart
+
+# Locale Testing
+lib/locale/
