@@ -11,6 +11,7 @@ void main(List<String> arguments) {
       defaultsTo: true,
       help: 'Translate all texts via the DeepL API',
     )
+    // add comment
     ..addOption(
       Commands.defaultLanguage,
       abbr: 'd',
