@@ -26,21 +26,6 @@ void main(List<String> arguments) {
       valueHelp: 'en,es,ru',
       help: 'Provide the languages your project can support',
     );
-  // ..addOption(
-  //   Commands.languageFilesPath,
-  //   abbr: 'f',
-  //   valueHelp: 'lib/locale/translations/',
-  //   defaultsTo: 'lib/locale/translations/',
-  //   help:
-  //       'Add a custom path where your translations are saved. Is using the project path like <projectPath>/<languageFilesPath>.',
-  // )
-  // ..addOption(
-  //   Commands.projectPath,
-  //   abbr: 'p',
-  //   valueHelp: '/Users/name/projects/translator',
-  //   defaultsTo: Directory.current.path,
-  //   help: 'Add a custom project path.',
-  // );
 
   print(parser.usage);
 
@@ -49,8 +34,6 @@ void main(List<String> arguments) {
   final argumentHandler = ArgumentHandler(
     useDeepL: result[Commands.useDeepl],
     languageCodes: result[Commands.languageCodes],
-    languageFilesPath: '', // result[Commands.languageFilesPath],
-    projectPath: '', // result[Commands.projectPath],
     env: Env(),
   );
 

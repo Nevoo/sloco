@@ -6,18 +6,12 @@ import 'env/env.dart';
 class ArgumentHandler {
   final bool useDeepL;
   final String? languageCodes;
-  // TODO: coming soon
-  final String languageFilesPath;
-  // TODO: coming soon
-  final String projectPath;
 
   Env env;
 
   ArgumentHandler({
     required this.useDeepL,
     required this.languageCodes,
-    required this.languageFilesPath,
-    required this.projectPath,
     required this.env,
   });
 
