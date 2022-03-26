@@ -13,10 +13,10 @@ class Commands {
   /// Set a custom path to where your language files are generated.
   ///
   /// Defaults to `<projectPath>/locale/translations`
-  static const languageFilesPath = 'languageFilesPath';
+  static const languageFilesPath = 'language-files-path';
 
   /// Set the language codes which the app should support
-  static const languageCodes = 'languageCodes';
+  static const languageCodes = 'language-codes';
 
   /// Use DeepL to translate your texts.
   ///
