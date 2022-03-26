@@ -3,9 +3,9 @@ import 'package:translator/argument_handler.dart';
 import 'package:translator/core/classes/commands.dart';
 import 'package:translator/env/env.dart';
 import 'package:translator/translator.dart';
-import 'dart:io' show Directory, Platform;
+import 'dart:io' show Platform;
 
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   final parser = ArgParser()
     ..addFlag(
       Commands.useDeepl,
@@ -37,7 +37,7 @@ void main(List<String> arguments) {
     env: Env(),
   );
 
-  argumentHandler.handleArguments();
+  await argumentHandler.handleArguments();
 
   final translator = Translator(
     defaultLanguage: result[Commands.defaultLanguage],
