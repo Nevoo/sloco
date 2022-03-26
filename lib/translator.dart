@@ -23,6 +23,9 @@ class Translator {
     required this.env,
   });
 
+  /// Searching for all Strings in the project that use the `.tr` extension.
+  /// Creates language files based on the provided language codes
+  /// and translates via DeepL if wanted.
   void translate() async {
     final fileNamesWithTranslation = await _getFileNamesWithTranslations();
     await _writeTranslationsToBaseFile(fileNamesWithTranslation);
