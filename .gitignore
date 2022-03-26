@@ -14,3 +14,4 @@ lib/env/env.g.dart
 
 # Locale Testing
 lib/locale/
+doc/
