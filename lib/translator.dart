@@ -47,7 +47,7 @@ class Translator {
   /// and the values are all translation for that specific file.
   /// ```dart
   /// {
-  ///   'example.dart': ['Hello', 'World'],
+  ///   'example.dart': ["'Hello'", "'World'"],
   /// }
   /// ```
   Future<Map<String, List<String>>> _getFileNamesWithTranslations() async {
