@@ -16,17 +16,11 @@ String testing = 'Dusche'.tr;
 class Translator {
   final String defaultLanguage;
   final bool useDeepL;
-  final List<String> languageCodes;
-  final String languageFilesPath;
-  final String projectPath;
   final Env env;
 
   Translator({
     required this.defaultLanguage,
     required this.useDeepL,
-    required this.languageCodes,
-    required this.languageFilesPath,
-    required this.projectPath,
     required this.env,
   });
 

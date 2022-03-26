@@ -25,45 +25,42 @@ void main(List<String> arguments) {
       abbr: 'c',
       valueHelp: 'en,es,ru',
       help: 'Provide the languages your project can support',
-    )
-    ..addOption(
-      Commands.languageFilesPath,
-      abbr: 'f',
-      valueHelp: 'lib/locale/translations/',
-      defaultsTo: 'lib/locale/translations/',
-      help:
-          'Add a custom path where your translations are saved. Is using the project path like <projectPath>/<languageFilesPath>.',
-    )
-    ..addOption(
-      Commands.projectPath,
-      abbr: 'p',
-      valueHelp: '/Users/name/projects/translator',
-      defaultsTo: Directory.current.path,
-      help: 'Add a custom project path.',
     );
+  // ..addOption(
+  //   Commands.languageFilesPath,
+  //   abbr: 'f',
+  //   valueHelp: 'lib/locale/translations/',
+  //   defaultsTo: 'lib/locale/translations/',
+  //   help:
+  //       'Add a custom path where your translations are saved. Is using the project path like <projectPath>/<languageFilesPath>.',
+  // )
+  // ..addOption(
+  //   Commands.projectPath,
+  //   abbr: 'p',
+  //   valueHelp: '/Users/name/projects/translator',
+  //   defaultsTo: Directory.current.path,
+  //   help: 'Add a custom project path.',
+  // );
 
-  ArgResults result = parser.parse(arguments);
   print(parser.usage);
 
+  ArgResults result = parser.parse(arguments);
+
   final argumentHandler = ArgumentHandler(
-    defaultLanguage: result[Commands.defaultLanguage],
     useDeepL: result[Commands.useDeepl],
     languageCodes: result[Commands.languageCodes],
-    languageFilesPath: result[Commands.languageFilesPath],
-    projectPath: result[Commands.projectPath],
+    languageFilesPath: '', // result[Commands.languageFilesPath],
+    projectPath: '', // result[Commands.projectPath],
     env: Env(),
   );
 
   argumentHandler.handleArguments();
 
-  // final translator = Translator(
-  // defaultLanguage: result[Commands.defaultLanguage],
-  // useDeepL: result[Commands.useDeepl],
-  // languageCodes: result[Commands.languageCodes],
-  // languageFilesPath: result[Commands.languageFilesPath],
-  // projectPath: result[Commands.projectPath],
-  // );
+  final translator = Translator(
+    defaultLanguage: result[Commands.defaultLanguage],
+    useDeepL: result[Commands.useDeepl],
+    env: Env(),
+  );
 
-  // translator.handleArguments();
-  // translator.translate();
+  translator.translate();
 }

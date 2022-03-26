@@ -4,16 +4,16 @@ import 'env/env.dart';
 
 /// Helper class to handle arguments
 class ArgumentHandler {
-  final String defaultLanguage;
   final bool useDeepL;
   final String? languageCodes;
+  // TODO: coming soon
   final String languageFilesPath;
+  // TODO: coming soon
   final String projectPath;
 
   Env env;
 
   ArgumentHandler({
-    required this.defaultLanguage,
     required this.useDeepL,
     required this.languageCodes,
     required this.languageFilesPath,
@@ -55,6 +55,7 @@ class ArgumentHandler {
     var codes = matches.expand((match) => [match.group(0)]).toList();
 
     for (var code in codes) {
+      // TODO: Use language file path / project path
       await File('lib/locale/translations/$code.dart').create(recursive: true);
     }
   }
