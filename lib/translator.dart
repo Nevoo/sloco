@@ -7,19 +7,19 @@ import 'package:translator/env/env.dart';
 import 'package:translator/translation_string_extension.dart';
 
 // TODO: implement Path package, to make this work on windows aswell https://pub.dev/packages/path
+// TODO: provide langauge codes via cli
 // TODO: provide arg for custom path to project
 // TODO: add arg to specify custom paths for saving the language files
-// TODO: provide langauge codes via cli
 
 String testing = 'Dusche'.tr;
 
 class Translator {
   final String defaultLanguage;
   final bool useDeepL;
-  final String languageCodes;
+  final List<String> languageCodes;
   final String languageFilesPath;
   final String projectPath;
-  Env env = Env();
+  final Env env;
 
   Translator({
     required this.defaultLanguage,
@@ -27,31 +27,15 @@ class Translator {
     required this.languageCodes,
     required this.languageFilesPath,
     required this.projectPath,
+    required this.env,
   });
-
-  Future<void> handleArguments() async {
-    if (useDeepL && (env.deeplAuthKey == null || env.deeplAuthKey!.isEmpty)) {
-      stdout.writeln('Creating .env...');
-      final envFile = await File('.env').create();
-
-      stdout.writeln('Enter your DeepL Auth Key:\n');
-      final authKeyInput = stdin.readLineSync();
-
-      await envFile.writeAsString('DEEPL_AUTH_KEY="$authKeyInput"');
-
-      env = Env();
-
-      stdout.writeln(
-        '💡 Your DeepL Auth Key was saved to the CLIs environment variables. You can delete or update it any time.',
-      );
-    }
-  }
 
   void translate() async {
     final fileNamesWithTranslation = await _getFileNamesWithTranslations();
     await _writeTranslationsToBaseFile(fileNamesWithTranslation);
 
     final allTranslations = <String>[];
+
     for (var value in fileNamesWithTranslation.values) {
       allTranslations.addAll(value);
     }

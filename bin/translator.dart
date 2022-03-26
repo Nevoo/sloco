@@ -1,5 +1,7 @@
 import 'package:args/args.dart';
+import 'package:translator/argument_handler.dart';
 import 'package:translator/core/classes/commands.dart';
+import 'package:translator/env/env.dart';
 import 'package:translator/translator.dart';
 import 'dart:io' show Directory, Platform;
 
@@ -22,7 +24,6 @@ void main(List<String> arguments) {
       Commands.languageCodes,
       abbr: 'c',
       valueHelp: 'en,es,ru',
-      defaultsTo: 'en',
       help: 'Provide the languages your project can support',
     )
     ..addOption(
@@ -44,13 +45,25 @@ void main(List<String> arguments) {
   ArgResults result = parser.parse(arguments);
   print(parser.usage);
 
-  final translator = Translator(
+  final argumentHandler = ArgumentHandler(
     defaultLanguage: result[Commands.defaultLanguage],
     useDeepL: result[Commands.useDeepl],
     languageCodes: result[Commands.languageCodes],
     languageFilesPath: result[Commands.languageFilesPath],
     projectPath: result[Commands.projectPath],
+    env: Env(),
   );
 
-  translator.handleArguments();
+  argumentHandler.handleArguments();
+
+  // final translator = Translator(
+  // defaultLanguage: result[Commands.defaultLanguage],
+  // useDeepL: result[Commands.useDeepl],
+  // languageCodes: result[Commands.languageCodes],
+  // languageFilesPath: result[Commands.languageFilesPath],
+  // projectPath: result[Commands.projectPath],
+  // );
+
+  // translator.handleArguments();
+  // translator.translate();
 }
