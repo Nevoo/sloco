@@ -41,7 +41,15 @@ class Translator {
     exit(0);
   }
 
-// FIND TRANSLATIONS IN CODE
+  /// Searching for all Strings in the project that use the `.tr` extension.
+  ///
+  /// Returns a map where the key is the file in which the translation were found
+  /// and the values are all translation for that specific file.
+  /// ```dart
+  /// {
+  ///   'example.dart': ['Hello', 'World'],
+  /// }
+  /// ```
   Future<Map<String, List<String>>> _getFileNamesWithTranslations() async {
     stdout.writeln('Getting all Strings to translate...\n');
 
@@ -57,7 +65,7 @@ class Translator {
       await Future.forEach(dartFiles, (File fileEntity) async {
         var translationForSpecificFile = List<String>.empty(growable: true);
 
-        var fileContent = await readFileContent(fileEntity.path);
+        var fileContent = await _readFileContent(fileEntity.path);
 
         var matchTranslationExtension =
             RegExp(r"('[^'\\]*(?:\\.[^'\\]*)*'\s*\.tr\b)");
@@ -86,32 +94,35 @@ class Translator {
     }
   }
 
-  Future<List<FileSystemEntity>> _getDirectorysContents(Directory dir) {
+  /// Returns all files and directorys of a given [directory].
+  Future<List<FileSystemEntity>> _getDirectorysContents(Directory directory) {
     var files = <FileSystemEntity>[];
     final completer = Completer<List<FileSystemEntity>>();
-    var lister = dir.list(recursive: true);
+    var lister = directory.list(recursive: true);
     lister.listen((file) => files.add(file),
         onError: (error) => completer.completeError(error),
         onDone: () => completer.complete(files));
     return completer.future;
   }
 
+  /// Returns an iterable of all dart files in a list of [files].
   Iterable<File> _getDartFiles(List<FileSystemEntity> files) =>
       files.whereType<File>().where((file) => file.path.endsWith('.dart'));
 
-  Future<String> readFileContent(String filePath) async {
+  /// Reads, decodes and returns the content of a given [filePath]
+  Future<String> _readFileContent(String filePath) async {
     final readStream = File(filePath).openRead();
     return await utf8.decodeStream(readStream);
   }
 
+  /// Helper function to remove the last 3 chars of a [value].
   String _removeLastThreeChars(String value) =>
       value.length > 3 ? value.substring(0, value.length - 3) : value;
 
   String _basePath(FileSystemEntity fileEntity) =>
       fileEntity.uri.pathSegments.last;
 
-// BASE TRANSLATIONS
-
+  /// Writes all found Strings with the `tr` exentsion [fileNamesWithTranslation] into the base translation file.
   Future<void> _writeTranslationsToBaseFile(
     Map<String, List<String>> fileNamesWithTranslation,
   ) async {
@@ -137,8 +148,19 @@ class Translator {
     stdout.writeln('✅ Done!\n\n');
   }
 
+  /// Helper function to get the language of a given localization [file]
+  ///
+  /// The file should have the format `de.dart`
   String _getLanguage(FileSystemEntity file) => _basePath(file).split('.')[0];
 
+  /// Function which writes the translations to the given [file]
+  ///
+  /// Needs the [fileNameWithTranslation] because based on that, the content of the [file]
+  /// gets ordered.
+  /// [writeKeyAndValue] is a callback function for a custom implementation on how to write
+  /// the key and value of [fileNameWithTranslation].
+  /// You should not flush the IOSink that get's passed to [writeKeyAndValue], because that happens at the end of this function.
+  /// Creates a file with the [language] as a name
   Future<void> _writeTranslationsToFile(
     File file,
     Map<String, List<String>> fileNamesWithTranslation, {
@@ -166,8 +188,8 @@ class Translator {
     await sink.close();
   }
 
-// TRANSLATIONS
-
+  /// Gets all language files in the `lib/locale/translations` path and updates the files
+  /// incrementally with [allTranslations] and [fileNamesWithTranslation]
   Future<void> _writeTranslationsToAllTranslationFiles(
     List<String> allTranslations,
     Map<String, List<String>> fileNamesWithTranslation,
@@ -184,12 +206,17 @@ class Translator {
 
     await Future.forEach(filteredFiles, (File file) async {
       await _updateTranslations(
-          file, allTranslations, fileNamesWithTranslation);
+        file,
+        allTranslations,
+        fileNamesWithTranslation,
+      );
     });
 
     stdout.writeln('🍻🍻🍻 Successfully updated translations! 🍻🍻🍻\n\n\n');
   }
 
+  /// Updates each translation file and keeps track of all
+  /// missing translations, or updates missing translations with the DeepL API
   Future<void> _updateTranslations(
     FileSystemEntity fileEntity,
     List<String> allTranslations,
@@ -198,7 +225,7 @@ class Translator {
     stdout.writeln('Update translations in ${_basePath(fileEntity)} ...\n');
     var missingTranslationCounter = 0;
 
-    final fileContent = await readFileContent(fileEntity.path);
+    final fileContent = await _readFileContent(fileEntity.path);
     final matchComments = RegExp(r'\/\/.*\n?');
     final keysAndValues = fileContent.replaceAll(matchComments, '');
 
@@ -259,6 +286,8 @@ class Translator {
         '💡  $missingTranslationCounter missing translation${missingTranslationCounter == 1 ? '' : 's'}\n\n');
   }
 
+  /// Returns the translation for the given [text] and the [language] in which it should be translated
+  /// via the DeepL API
   Future<String> _deepLTranslate(String text, String language) async {
     try {
       final url = Uri.https('api-free.deepl.com', '/v2/translate');
