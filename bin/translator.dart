@@ -24,7 +24,7 @@ void main(List<String> arguments) async {
       Commands.languageCodes,
       abbr: 'c',
       valueHelp: 'en,es,ru',
-      help: 'Provide the languages your project can support',
+      help: 'Provide the languages your project should support',
     );
 
   print(parser.usage);
