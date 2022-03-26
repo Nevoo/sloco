@@ -1,7 +1,7 @@
 import 'package:args/args.dart';
 import 'package:translator/core/classes/commands.dart';
 import 'package:translator/translator.dart';
-import 'dart:io' show Platform;
+import 'dart:io' show Directory, Platform;
 
 void main(List<String> arguments) {
   final parser = ArgParser()
@@ -22,7 +22,23 @@ void main(List<String> arguments) {
       Commands.languageCodes,
       abbr: 'c',
       valueHelp: 'en,es,ru',
+      defaultsTo: 'en',
       help: 'Provide the languages your project can support',
+    )
+    ..addOption(
+      Commands.languageFilesPath,
+      abbr: 'f',
+      valueHelp: 'lib/locale/translations/',
+      defaultsTo: 'lib/locale/translations/',
+      help:
+          'Add a custom path where your translations are saved. Is using the project path like <projectPath>/<languageFilesPath>.',
+    )
+    ..addOption(
+      Commands.projectPath,
+      abbr: 'p',
+      valueHelp: '/Users/name/projects/translator',
+      defaultsTo: Directory.current.path,
+      help: 'Add a custom project path.',
     );
 
   ArgResults result = parser.parse(arguments);
@@ -36,5 +52,5 @@ void main(List<String> arguments) {
     projectPath: result[Commands.projectPath],
   );
 
-  translator.translate();
+  translator.handleArguments();
 }

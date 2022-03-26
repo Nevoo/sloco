@@ -19,6 +19,7 @@ class Translator {
   final String languageCodes;
   final String languageFilesPath;
   final String projectPath;
+  Env env = Env();
 
   Translator({
     required this.defaultLanguage,
@@ -27,6 +28,24 @@ class Translator {
     required this.languageFilesPath,
     required this.projectPath,
   });
+
+  Future<void> handleArguments() async {
+    if (useDeepL && (env.deeplAuthKey == null || env.deeplAuthKey!.isEmpty)) {
+      stdout.writeln('Creating .env...');
+      final envFile = await File('.env').create();
+
+      stdout.writeln('Enter your DeepL Auth Key:\n');
+      final authKeyInput = stdin.readLineSync();
+
+      await envFile.writeAsString('DEEPL_AUTH_KEY="$authKeyInput"');
+
+      env = Env();
+
+      stdout.writeln(
+        '💡 Your DeepL Auth Key was saved to the CLIs environment variables. You can delete or update it any time.',
+      );
+    }
+  }
 
   void translate() async {
     final fileNamesWithTranslation = await _getFileNamesWithTranslations();
@@ -268,7 +287,7 @@ class Translator {
       final url = Uri.https('api-free.deepl.com', '/v2/translate');
 
       Map<String, dynamic> body = {
-        "auth_key": Env.deeplAuthKey,
+        "auth_key": env.deeplAuthKey,
         "text": text,
         "target_lang": language,
         "source_lang": defaultLanguage.toUpperCase(),

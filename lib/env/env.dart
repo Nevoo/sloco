@@ -1,10 +1,11 @@
-import 'package:envify/envify.dart';
+import 'package:dotenv/dotenv.dart';
 
-part 'env.g.dart';
-
-@Envify()
 class Env {
-  const Env._();
+  late final String? deeplAuthKey;
 
-  static const deeplAuthKey = _Env.deeplAuthKey;
+  Env() {
+    load();
+
+    deeplAuthKey = env['DEEPL_AUTH_KEY'];
+  }
 }
