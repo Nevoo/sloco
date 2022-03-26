@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'env/env.dart';
 
+// TODO: add command to update or delete DeepL API Key
 /// Helper class to handle arguments
 class ArgumentHandler {
   final bool useDeepL;
