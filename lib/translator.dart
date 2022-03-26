@@ -7,7 +7,6 @@ import 'package:translator/env/env.dart';
 import 'package:translator/translation_string_extension.dart';
 
 // TODO: implement Path package, to make this work on windows aswell https://pub.dev/packages/path
-// TODO: provide langauge codes via cli
 // TODO: provide arg for custom path to project
 // TODO: add arg to specify custom paths for saving the language files
 
