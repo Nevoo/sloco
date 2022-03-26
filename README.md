@@ -1,2 +1,7 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+# Translator CLI
+
+<aside>
+💡 A small CLI Tool to help you with an approach to solve some issues we had with localizations
+
+</aside>
+
