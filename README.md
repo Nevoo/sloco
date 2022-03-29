@@ -10,7 +10,7 @@
 
 ## What it does and how it works
 
-The cli tool searches for strings with a ‘.tr’ extension. For example this might look like this: 
+The cli tool searches for strings with a ‘.tr’ extension. For example this might look like this:
 
 ```dart
 var translation = 'Apple'.tr;
@@ -40,7 +40,6 @@ final Map<String, String> de = {
 ```
 
 If you want to, you can provide a DeepL Auth Key so the cli generates all the translations for you.
-
 <br>
 <br>
 
