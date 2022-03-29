@@ -69,3 +69,17 @@ $ translator --language-codes en,es,ru
 ```shell
 $ translator --default-language en --no-use-deepl --language-codes en,es,ru
 ```
+
+## Updating or Deleting your DeepL Auth Key
+
+**You can update your DeepL Auth Key:**
+
+```bash
+$ translator --update-deepl-key
+```
+
+**Or delete it:**
+
+```bash
+$ translator --delete-deepl-key
+```
