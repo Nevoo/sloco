@@ -13,6 +13,18 @@ void main(List<String> arguments) async {
       defaultsTo: true,
       help: 'Translate all texts via the DeepL API',
     )
+    ..addFlag(
+      Commands.deleteDeeplKey,
+      defaultsTo: false,
+      negatable: false,
+      help: 'Delete your DeepL Auth Key from the environment',
+    )
+    ..addFlag(
+      Commands.updateDeeplKey,
+      defaultsTo: false,
+      negatable: false,
+      help: 'Update your DeepL Auth Key',
+    )
     ..addOption(
       Commands.defaultLanguage,
       abbr: 'd',
@@ -34,6 +46,8 @@ void main(List<String> arguments) async {
   final argumentHandler = ArgumentHandler(
     useDeepL: result[Commands.useDeepl],
     languageCodes: result[Commands.languageCodes],
+    updateDeepLKey: result[Commands.updateDeeplKey],
+    deleteDeepLKey: result[Commands.deleteDeeplKey],
     env: Env(),
   );
 
@@ -45,5 +59,7 @@ void main(List<String> arguments) async {
     env: Env(),
   );
 
-  translator.translate();
+  if (!result[Commands.deleteDeeplKey] && !result[Commands.updateDeeplKey]) {
+    translator.translate();
+  }
 }

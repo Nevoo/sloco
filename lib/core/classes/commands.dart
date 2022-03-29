@@ -24,4 +24,10 @@ class Commands {
   ///
   /// You have to provide your own API Key to use this feature
   static const useDeepl = 'use-deepl';
+
+  /// Delete your DeepL Auth Key
+  static const deleteDeeplKey = 'delete-deepl-key';
+
+  /// Update your DeepL Auth Key
+  static const updateDeeplKey = 'update-deepl-key';
 }

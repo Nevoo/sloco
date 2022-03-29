@@ -3,14 +3,17 @@ import 'dart:io';
 import 'env/env.dart';
 
 /// Helper class to handle arguments
-// TODO: add command to update or delete DeepL API Key
 class ArgumentHandler {
   final bool useDeepL;
+  final bool updateDeepLKey;
+  final bool deleteDeepLKey;
   final String? languageCodes;
 
   Env env;
 
   ArgumentHandler({
+    required this.updateDeepLKey,
+    required this.deleteDeepLKey,
     required this.useDeepL,
     required this.languageCodes,
     required this.env,
@@ -23,20 +26,33 @@ class ArgumentHandler {
 
   /// Saving the DeepL Auth Key in the environment of the CLI
   Future<void> _enterDeepLAuthKey() async {
-    if (useDeepL && (env.deeplAuthKey == null || env.deeplAuthKey!.isEmpty)) {
-      stdout.writeln('Creating .env...');
+    if (updateDeepLKey && deleteDeepLKey) {
+      stdout.writeln(
+        '❗ You cant update and delete your Auth Key simultaneously',
+      );
+      return;
+    }
+
+    if ((updateDeepLKey || deleteDeepLKey) ||
+        useDeepL && (env.deeplAuthKey == null || env.deeplAuthKey!.isEmpty)) {
+      if (!deleteDeepLKey) stdout.writeln('Creating .env...');
       final envFile = await File('.env').create();
 
-      stdout.writeln('Enter your DeepL Auth Key:\n');
-      final authKeyInput = stdin.readLineSync();
+      !deleteDeepLKey
+          ? stdout.writeln('Enter your DeepL Auth Key:\n')
+          : stdout.writeln('Deleting your Auth Key\n');
+
+      final authKeyInput = !deleteDeepLKey ? stdin.readLineSync() : '';
 
       await envFile.writeAsString('DEEPL_AUTH_KEY="$authKeyInput"');
 
       env = Env();
 
-      stdout.writeln(
-        '💡 Your DeepL Auth Key was saved to the CLIs environment variables. You can delete or update it any time.',
-      );
+      !deleteDeepLKey
+          ? stdout.writeln(
+              '💡 Your DeepL Auth Key was saved to the CLIs environment variables. You can delete or update it any time.',
+            )
+          : stdout.writeln('✅ Your Key was removed successfully\n');
     }
   }
 
