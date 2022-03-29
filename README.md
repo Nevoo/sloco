@@ -1,15 +1,45 @@
 # Translator CLI
 
 <br>
-
-<aside>
-💡 A small CLI Tool to help you with an approach to solve some issues we had with localizations.
-</aside>
-<br>
-<br>
 <aside>
 ❗️ This is currently the bare minimum version which is working for me. Right now this will also propbably not work on Windows.
 </aside>
+
+<br>
+<br>
+
+## What it does and how it works
+
+The cli tool searches for strings with a ‘.tr’ extension. For example this might look like this: 
+
+```dart
+var translation = 'Apple'.tr;
+```
+
+This is inspired by the [get](https://pub.dev/packages/get) package translation approach, but you don’t have to use that package. You can implement your own translation logic when using this tool. 
+
+In the most basic use case, the cli just generates a file at `locale/translations/base_translations/<language_code>.dart`. Where the language code is ‘de’ by default, but you can provide any you need. The file contents look like this:
+
+```dart
+final Map<String, String> en {
+	//  main.dart
+	'Apple': 'Apple',
+}
+```
+
+You can then use that map in your string extension, to get the translations.
+
+Furthermore, you can pass language codes to the cli for which languages the app should be able to support. The cli generates all necessary files for that at `locale/translations/<language_code>.dart`. 
+Let’s say you provided the language code ‘de’ for german, so this file should generate:
+
+```dart
+final Map<String, String> de = {
+	//  translator.dart
+	'Apple': '--missing translation--',
+};
+```
+
+If you want to, you can provide a DeepL Auth Key so the cli generates all the translations for you.
 
 <br>
 <br>
