@@ -8,11 +8,13 @@ class Commands {
   /// Set a custom path to the project.
   ///
   /// The CLI defaults to your current relative path.
+  /// @Unimplemented
   static const projectPath = 'project-path';
 
   /// Set a custom path to where your language files are generated.
   ///
   /// Defaults to `<projectPath>/locale/translations`
+  /// @Unimplemented
   static const languageFilesPath = 'language-files-path';
 
   /// Set the language codes which the app should support
