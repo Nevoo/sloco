@@ -32,7 +32,7 @@ $ dart pub global activate translator
 
 ```yaml
 dev_dependencies:
-	translator: any
+  translator: any
 ```
 
 ## How To Use
