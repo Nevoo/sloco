@@ -26,9 +26,7 @@ class ArgumentHandler {
       await _enterDeepLAuthKey();
       await _createLanguageFiles();
     } on DeepLException catch (exception) {
-      stdout.writeln(
-        '❗ ${exception.message}',
-      );
+      stdout.writeln('❗ ${exception.message}');
     }
   }
 
