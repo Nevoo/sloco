@@ -1,37 +1,86 @@
 import 'dart:convert' show utf8;
-import 'dart:io' show File;
+import 'dart:io' show File, Directory;
 
-import 'package:translator/env/env.dart';
+import 'package:translator/argument_handler.dart';
 import 'package:translator/translator.dart';
 import 'package:test/test.dart';
 
+import 'mock/mock_env.dart';
+
 void main() {
-  test('Calls translate and generates base_translation file', () async {
-    final translator = Translator(
-      defaultLanguage: 'de',
-      useDeepL: false,
-      env: Env(),
-    );
+  group("Translator class", () {
+    late final MockEnv mockEnv;
 
-    expect(translator.useDeepL, isFalse);
-    expect(translator.defaultLanguage, equals('de'));
+    setUpAll(() {
+      mockEnv = MockEnv(null);
+    });
+    test('calls translate and generates base_translation file', () async {
+      final translator = Translator(
+        defaultLanguage: 'de',
+        useDeepL: false,
+        env: mockEnv,
+      );
 
-    await translator.translate();
+      expect(translator.useDeepL, isFalse);
+      expect(translator.defaultLanguage, equals('de'));
 
-    var baseTranslationFile = File(
-      'lib/locale/translations/base_translations/de.dart',
-    );
+      await translator.translate();
 
-    var contentStream = baseTranslationFile.openRead();
-    var decoded = await utf8.decodeStream(contentStream);
+      var baseTranslationFile = File(
+        'lib/locale/translations/base_translations/de.dart',
+      );
 
-    var expectedResult = r'''final Map<String, String> de = {
+      var contentStream = baseTranslationFile.openRead();
+      var decoded = await utf8.decodeStream(contentStream);
+
+      var expectedResult = r'''final Map<String, String> de = {
 
 	//  translator.dart
 	'Dusche': 'Dusche',
 };
 ''';
 
-    expect(expectedResult, equals(decoded));
+      expect(expectedResult, equals(decoded));
+    });
+  });
+
+  group('Argument Handler', () {
+    late final MockEnv mockEnv;
+
+    setUpAll(() {
+      mockEnv = MockEnv(null);
+    });
+    test(
+      'generates translation files for supported langauge, if language codes are provided',
+      () async {
+        final handler = ArgumentHandler(
+          updateDeepLKey: false,
+          deleteDeepLKey: false,
+          useDeepL: false,
+          languageCodes: 'en,es',
+          env: mockEnv,
+        );
+
+        await handler.handleArguments();
+
+        final dir = Directory('lib/locale/translations/');
+        var lister = dir.list();
+        var filePaths = <String>[];
+
+        await for (var file in lister) {
+          expect(file.exists(), completion(isTrue));
+
+          filePaths.add(file.path);
+        }
+
+        expect(
+          filePaths,
+          containsAll([
+            'lib/locale/translations/es.dart',
+            'lib/locale/translations/en.dart'
+          ]),
+        );
+      },
+    );
   });
 }
