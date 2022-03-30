@@ -42,8 +42,6 @@ class Translator {
       allTranslations,
       fileNamesWithTranslation,
     );
-
-    exit(0);
   }
 
   /// Searching for all Strings in the project that use the `.tr` extension.

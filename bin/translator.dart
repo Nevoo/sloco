@@ -3,7 +3,7 @@ import 'package:translator/argument_handler.dart';
 import 'package:translator/core/classes/commands.dart';
 import 'package:translator/env/env.dart';
 import 'package:translator/translator.dart';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, exit;
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
@@ -62,4 +62,6 @@ void main(List<String> arguments) async {
   if (!result[Commands.deleteDeeplKey] && !result[Commands.updateDeeplKey]) {
     await translator.translate();
   }
+
+  exit(0);
 }
