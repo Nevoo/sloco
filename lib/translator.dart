@@ -305,7 +305,12 @@ class Translator {
 
       var response = await http.post(url, body: body);
 
-      if (response.statusCode != 200) return missingTranslation;
+      if (response.statusCode != 200) {
+        stdout.writeln(
+          '❗️ Something went wrong while translating with DeepL. Maybe check if you provided a valid language code.',
+        );
+        return missingTranslation;
+      }
 
       var json = jsonDecode(
         utf8.decode(response.bodyBytes),
