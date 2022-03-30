@@ -292,6 +292,7 @@ class Translator {
   /// Returns the translation for the given [text] and the [language] in which it should be translated
   /// via the DeepL API
   Future<String> _deepLTranslate(String text, String language) async {
+    const missingTranslation = "--missing translation--";
     try {
       final url = Uri.https('api-free.deepl.com', '/v2/translate');
 
@@ -303,15 +304,21 @@ class Translator {
       };
 
       var response = await http.post(url, body: body);
+
+      if (response.statusCode != 200) return missingTranslation;
+
       var json = jsonDecode(
         utf8.decode(response.bodyBytes),
-      ) as Map<String, dynamic>;
-      var result = json['translations'][0]['text'];
+      ) as Map<String, dynamic>?;
 
-      return result;
+      if (json != null) {
+        return json['translations'][0]['text'];
+      }
+
+      return missingTranslation;
     } on Exception {
       stderr.writeln("❗️ Something went wrong while translating with deepl ");
-      return "--missing translation--";
+      return missingTranslation;
     }
   }
 }
