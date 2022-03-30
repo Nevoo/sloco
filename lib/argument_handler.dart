@@ -30,7 +30,8 @@ class ArgumentHandler {
       stdout.writeln(
         '❗ You cant update and delete your Auth Key simultaneously',
       );
-      return;
+
+      exit(1);
     }
 
     if ((updateDeepLKey || deleteDeepLKey) ||

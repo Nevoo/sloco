@@ -60,6 +60,6 @@ void main(List<String> arguments) async {
   );
 
   if (!result[Commands.deleteDeeplKey] && !result[Commands.updateDeeplKey]) {
-    translator.translate();
+    await translator.translate();
   }
 }
