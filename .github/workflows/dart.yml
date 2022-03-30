@@ -12,7 +12,7 @@ on:
     branches: [ master ]
 
 jobs:
-  Build-Test:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
