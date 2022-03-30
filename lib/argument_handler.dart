@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:translator/deepl_exception.dart';
+
 import 'env/env.dart';
 
 /// Helper class to handle arguments
@@ -20,18 +22,23 @@ class ArgumentHandler {
   });
 
   Future<void> handleArguments() async {
-    await _enterDeepLAuthKey();
-    await _createLanguageFiles();
+    try {
+      await _enterDeepLAuthKey();
+      await _createLanguageFiles();
+    } on DeepLException catch (exception) {
+      stdout.writeln(
+        '❗ ${exception.message}',
+      );
+    }
   }
 
   /// Saving the DeepL Auth Key in the environment of the CLI
   Future<void> _enterDeepLAuthKey() async {
     if (updateDeepLKey && deleteDeepLKey) {
-      stdout.writeln(
-        '❗ You cant update and delete your Auth Key simultaneously',
+      throw DeepLException(
+        'You cant update and delete your Auth Key simultaneously',
+        stackTrace: StackTrace.current,
       );
-
-      exit(1);
     }
 
     if ((updateDeepLKey || deleteDeepLKey) ||
