@@ -1,5 +1,5 @@
 import 'dart:convert' show utf8;
-import 'dart:io' show File, Directory, stdin, stdout;
+import 'dart:io' show File, Directory;
 
 import 'package:translator/argument_handler.dart';
 import 'package:translator/deepl_exception.dart';

@@ -4,7 +4,7 @@ import 'package:translator/core/classes/commands.dart';
 import 'package:translator/deepl_exception.dart';
 import 'package:translator/env/env.dart';
 import 'package:translator/translator.dart';
-import 'dart:io' show Platform, exit, stdout;
+import 'dart:io' show Platform, exit;
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
