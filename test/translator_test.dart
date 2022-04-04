@@ -4,12 +4,16 @@ import 'dart:io' show File, Directory, stdin, stdout;
 import 'package:translator/argument_handler.dart';
 import 'package:translator/deepl_exception.dart';
 import 'package:translator/env/env.dart';
+import 'mock/translation_string_extension.dart';
 import 'package:translator/translator.dart';
 import 'package:test/test.dart';
 
 import 'mock/mock_env.dart';
 
 void main() {
+  String testing = 'Dusche'.tr;
+  String testing2 = 'Dusche'.tr;
+
   group("Translator class", () {
     late final MockEnv mockEnv;
 
@@ -37,11 +41,88 @@ void main() {
 
       var expectedResult = r'''final Map<String, String> de = {
 
-	//  translator.dart
+	//  translator_test.dart
 	'Dusche': 'Dusche',
 };
 ''';
 
+      expect(expectedResult, equals(decoded));
+    });
+
+    test('uses deepl', () async {
+      final mockedApiEnv = MockEnv("MockApiKey");
+      final handler = ArgumentHandler(
+        updateDeepLKey: false,
+        deleteDeepLKey: false,
+        useDeepL: true,
+        languageCodes: 'en',
+        env: mockedApiEnv,
+      );
+
+      await handler.handleArguments();
+
+      final translator = Translator(
+        defaultLanguage: 'de',
+        useDeepL: true,
+        env: mockedApiEnv,
+      );
+
+      await translator.translate();
+
+      var translationFile = File(
+        'lib/locale/translations/en.dart',
+      );
+
+      var contentStream = translationFile.openRead();
+      var decoded = await utf8.decodeStream(contentStream);
+
+      var expectedResult = r'''final Map<String, String> en = {
+
+	//  translator_test.dart
+	'Dusche': '--missing translation--',
+};
+''';
+
+      expect(expectedResult, equals(decoded));
+    });
+
+    test(
+        "uses empty old Translations, when translation file contains invalid json",
+        () async {
+      final handler = ArgumentHandler(
+        updateDeepLKey: false,
+        deleteDeepLKey: false,
+        useDeepL: false,
+        languageCodes: 'en,es',
+        env: mockEnv,
+      );
+
+      await handler.handleArguments();
+
+      final translator = Translator(
+        defaultLanguage: 'de',
+        useDeepL: false,
+        env: mockEnv,
+      );
+
+      var translationFile = File(
+        'lib/locale/translations/en.dart',
+      );
+
+      // mocking empty file to force range error
+      await translationFile.writeAsString('');
+
+      await translator.translate();
+
+      var contentStream = translationFile.openRead();
+      var decoded = await utf8.decodeStream(contentStream);
+
+      var expectedResult = r'''final Map<String, String> en = {
+
+	//  translator_test.dart
+	'Dusche': '--missing translation--',
+};
+''';
       expect(expectedResult, equals(decoded));
     });
   });
