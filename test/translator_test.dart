@@ -2,6 +2,7 @@ import 'dart:convert' show utf8;
 import 'dart:io' show File, Directory;
 
 import 'package:translator/argument_handler.dart';
+import 'package:translator/deepl_exception.dart';
 import 'package:translator/translator.dart';
 import 'package:test/test.dart';
 
@@ -50,6 +51,7 @@ void main() {
     setUpAll(() {
       mockEnv = MockEnv(null);
     });
+
     test(
       'generates translation files for supported langauge, if language codes are provided',
       () async {
@@ -82,5 +84,46 @@ void main() {
         );
       },
     );
+
+    test('update deepl auth key', () async {
+      final handler = ArgumentHandler(
+        updateDeepLKey: true,
+        deleteDeepLKey: false,
+        useDeepL: false,
+        languageCodes: 'en,es',
+        env: mockEnv,
+      );
+
+      await handler.handleArguments();
+    });
+
+    test('delete deepl auth key', () async {
+      final handler = ArgumentHandler(
+        updateDeepLKey: false,
+        deleteDeepLKey: true,
+        useDeepL: false,
+        languageCodes: 'en,es',
+        env: mockEnv,
+      );
+
+      await handler.handleArguments();
+    });
+
+    test(
+        'throws DeepLException if both updateDeepLKey and deleteDeepLKey are passed',
+        () async {
+      final handler = ArgumentHandler(
+        updateDeepLKey: true,
+        deleteDeepLKey: true,
+        useDeepL: false,
+        languageCodes: '',
+        env: mockEnv,
+      );
+
+      await expectLater(
+        handler.handleArguments(),
+        throwsA(isA<DeepLException>()),
+      );
+    });
   });
 }

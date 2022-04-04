@@ -21,12 +21,14 @@ class ArgumentHandler {
     required this.env,
   });
 
+  /// Throws a [DeepLException] if wrong parameters are passed
   Future<void> handleArguments() async {
     try {
       await _enterDeepLAuthKey();
       await _createLanguageFiles();
     } on DeepLException catch (exception) {
       stdout.writeln('❗ ${exception.message}');
+      rethrow;
     }
   }
 

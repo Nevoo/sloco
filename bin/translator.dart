@@ -1,9 +1,10 @@
 import 'package:args/args.dart';
 import 'package:translator/argument_handler.dart';
 import 'package:translator/core/classes/commands.dart';
+import 'package:translator/deepl_exception.dart';
 import 'package:translator/env/env.dart';
 import 'package:translator/translator.dart';
-import 'dart:io' show Platform, exit;
+import 'dart:io' show Platform, exit, stdout;
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
@@ -51,7 +52,11 @@ void main(List<String> arguments) async {
     env: Env(),
   );
 
-  await argumentHandler.handleArguments();
+  try {
+    await argumentHandler.handleArguments();
+  } on DeepLException catch (_) {
+    exit(2);
+  }
 
   final translator = Translator(
     defaultLanguage: result[Commands.defaultLanguage],
