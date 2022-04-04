@@ -1,8 +1,9 @@
 import 'dart:convert' show utf8;
-import 'dart:io' show File, Directory;
+import 'dart:io' show File, Directory, stdin, stdout;
 
 import 'package:translator/argument_handler.dart';
 import 'package:translator/deepl_exception.dart';
+import 'package:translator/env/env.dart';
 import 'package:translator/translator.dart';
 import 'package:test/test.dart';
 
@@ -85,28 +86,20 @@ void main() {
       },
     );
 
-    test('update deepl auth key', () async {
-      final handler = ArgumentHandler(
-        updateDeepLKey: true,
-        deleteDeepLKey: false,
-        useDeepL: false,
-        languageCodes: 'en,es',
-        env: mockEnv,
-      );
-
-      await handler.handleArguments();
-    });
-
     test('delete deepl auth key', () async {
       final handler = ArgumentHandler(
         updateDeepLKey: false,
         deleteDeepLKey: true,
         useDeepL: false,
-        languageCodes: 'en,es',
-        env: mockEnv,
+        languageCodes: '',
+        env: Env(),
       );
 
       await handler.handleArguments();
+
+      final env = Env();
+
+      expect(env.deeplAuthKey, equals(''));
     });
 
     test(
