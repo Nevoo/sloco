@@ -1,9 +1,9 @@
 import 'package:args/args.dart';
-import 'package:translator/argument_handler.dart';
-import 'package:translator/core/classes/commands.dart';
-import 'package:translator/deepl_exception.dart';
-import 'package:translator/env/env.dart';
-import 'package:translator/translator.dart';
+import 'package:slator/argument_handler.dart';
+import 'package:slator/core/classes/commands.dart';
+import 'package:slator/deepl_exception.dart';
+import 'package:slator/env/env.dart';
+import 'package:slator/translator.dart';
 import 'dart:io' show Platform, exit;
 
 void main(List<String> arguments) async {

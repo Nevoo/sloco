@@ -1,4 +1,4 @@
-import 'package:translator/env/env.dart';
+import 'package:slator/env/env.dart';
 
 class MockEnv implements Env {
   @override

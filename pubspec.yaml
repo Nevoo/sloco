@@ -1,4 +1,4 @@
-name: translator
+name: slator
 description: A Dart cli tool to create translations for all Strings in your project
 version: 0.0.1
 homepage: https://www.bytabo.de

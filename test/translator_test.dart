@@ -1,11 +1,13 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert' show utf8;
 import 'dart:io' show File, Directory;
 
-import 'package:translator/argument_handler.dart';
-import 'package:translator/deepl_exception.dart';
-import 'package:translator/env/env.dart';
+import 'package:slator/argument_handler.dart';
+import 'package:slator/deepl_exception.dart';
+import 'package:slator/env/env.dart';
 import 'mock/translation_string_extension.dart';
-import 'package:translator/translator.dart';
+import 'package:slator/translator.dart';
 import 'package:test/test.dart';
 
 import 'mock/mock_env.dart';
