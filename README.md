@@ -1,4 +1,4 @@
-# Translator CLI
+# Slator CLI
 
 <br>
 <aside>
@@ -34,7 +34,7 @@ Let’s say you provided the language code ‘de’ for german, so this file sho
 
 ```dart
 final Map<String, String> de = {
-	//  translator.dart
+	//  main.dart
 	'Apple': '--missing translation--',
 };
 ```
@@ -54,14 +54,14 @@ If you want to, you can provide a DeepL Auth Key so the cli generates all the tr
 **Either install it globally:**
 
 ```shell
-$ dart pub global activate translator
+$ dart pub global activate slator
 ```
 
 **Or add it to your dev_dependencies in your project:**
 
 ```yaml
 dev_dependencies:
-  translator: any
+  slator: any
 ```
 
 ## How To Use
@@ -69,14 +69,14 @@ dev_dependencies:
 **The most basic way is to run the command:**
 
 ```shell
-$ translator
+$ slator
 ```
 
 The default language is assumed to be german right now.
 **The default language can be easily set to a different language with the following command:**
 
 ```shell
-$ translator --default-language en
+$ slator --default-language en
 ```
 
 By default it uses the DeepL API to translate the missing strings and asks you, to enter your DeepL Auth Key. If you just leave it empty, the DeepL API will not work and it returns you a “missing translation” string.
@@ -84,19 +84,19 @@ By default it uses the DeepL API to translate the missing strings and asks you, 
 **The** r**ecommended way if you don’t want to use the API:**
 
 ```shell
-$ translator --no-use-deepl
+$ slator --no-use-deepl
 ```
 
 **You can pass in all the language codes for the languages your app should support:**
 
 ```shell
-$ translator --language-codes en,es,ru
+$ slator --language-codes en,es,ru
 ```
 
 **A full example could look like this:**
 
 ```shell
-$ translator --default-language en --no-use-deepl --language-codes en,es,ru
+$ slator --default-language en --no-use-deepl --language-codes en,es,ru
 ```
 
 ## Updating or Deleting your DeepL Auth Key
@@ -104,11 +104,11 @@ $ translator --default-language en --no-use-deepl --language-codes en,es,ru
 **You can update your DeepL Auth Key:**
 
 ```bash
-$ translator --update-deepl-key
+$ slator --update-deepl-key
 ```
 
 **Or delete it:**
 
 ```bash
-$ translator --delete-deepl-key
+$ slator --delete-deepl-key
 ```
