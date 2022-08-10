@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:slator/env/env.dart';
+import 'package:sloco/env/env.dart';
 
 // TODO: implement Path package, to make this work on windows aswell https://pub.dev/packages/path
 // TODO: provide arg for custom path to project

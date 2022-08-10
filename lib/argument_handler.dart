@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:slator/deepl_exception.dart';
+import 'package:sloco/deepl_exception.dart';
 
 import 'env/env.dart';
 

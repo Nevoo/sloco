@@ -1,4 +1,4 @@
-# Slator CLI
+# Sloco CLI
 
 <br>
 <aside>
@@ -54,14 +54,14 @@ If you want to, you can provide a DeepL Auth Key so the cli generates all the tr
 **Either install it globally:**
 
 ```shell
-$ dart pub global activate slator
+$ dart pub global activate sloco
 ```
 
 **Or add it to your dev_dependencies in your project:**
 
 ```yaml
 dev_dependencies:
-  slator: any
+  sloco: any
 ```
 
 ## How To Use
@@ -69,14 +69,14 @@ dev_dependencies:
 **The most basic way is to run the command:**
 
 ```shell
-$ slator
+$ sloco
 ```
 
 The default language is assumed to be german right now.
 **The default language can be easily set to a different language with the following command:**
 
 ```shell
-$ slator --default-language en
+$ sloco --default-language en
 ```
 
 By default it uses the DeepL API to translate the missing strings and asks you, to enter your DeepL Auth Key. If you just leave it empty, the DeepL API will not work and it returns you a “missing translation” string.
@@ -84,19 +84,19 @@ By default it uses the DeepL API to translate the missing strings and asks you, 
 **The** r**ecommended way if you don’t want to use the API:**
 
 ```shell
-$ slator --no-use-deepl
+$ sloco --no-use-deepl
 ```
 
 **You can pass in all the language codes for the languages your app should support:**
 
 ```shell
-$ slator --language-codes en,es,ru
+$ sloco --language-codes en,es,ru
 ```
 
 **A full example could look like this:**
 
 ```shell
-$ slator --default-language en --no-use-deepl --language-codes en,es,ru
+$ sloco --default-language en --no-use-deepl --language-codes en,es,ru
 ```
 
 ## Updating or Deleting your DeepL Auth Key
@@ -104,11 +104,11 @@ $ slator --default-language en --no-use-deepl --language-codes en,es,ru
 **You can update your DeepL Auth Key:**
 
 ```bash
-$ slator --update-deepl-key
+$ sloco --update-deepl-key
 ```
 
 **Or delete it:**
 
 ```bash
-$ slator --delete-deepl-key
+$ sloco --delete-deepl-key
 ```
