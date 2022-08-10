@@ -64,6 +64,12 @@ dev_dependencies:
   sloco: any
 ```
 
+**Then you can run every command with**
+
+```bash
+dart pub run sloco
+```
+
 ## How To Use
 
 **The most basic way is to run the command:**

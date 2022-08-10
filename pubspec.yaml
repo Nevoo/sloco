@@ -1,6 +1,6 @@
 name: sloco
 description: A Dart cli tool to create translations for all Strings in your project
-version: 0.0.1
+version: 0.0.2
 homepage: https://www.bytabo.de
 
 environment:
