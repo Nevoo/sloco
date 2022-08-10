@@ -6,7 +6,7 @@ class Env {
   late final String? deeplAuthKey;
 
   Env() {
-    load();
+    final env = DotEnv()..load();
 
     deeplAuthKey = env['DEEPL_AUTH_KEY'];
   }
