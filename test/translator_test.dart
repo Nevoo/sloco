@@ -14,7 +14,6 @@ import 'mock/mock_env.dart';
 
 void main() {
   String testing = 'Dusche'.tr;
-  String testing2 = 'Apfel'.tr;
 
   group("Translator class", () {
     late final MockEnv mockEnv;
