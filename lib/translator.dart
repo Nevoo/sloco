@@ -8,6 +8,7 @@ import 'package:sloco/env/env.dart';
 // TODO: implement Path package, to make this work on windows aswell https://pub.dev/packages/path
 // TODO: provide arg for custom path to project
 // TODO: add arg to specify custom paths for saving the language files
+// TODO: generate language code map with provided language codes to have one map which includes all translations
 
 /// Handels the translation logic, based on the passed [defaultLanguage]
 /// if it should [useDeepL] and the [env]
