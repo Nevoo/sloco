@@ -14,6 +14,9 @@ import 'mock/mock_env.dart';
 
 void main() {
   String testing = 'Dusche'.tr;
+  String example =
+      'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um'
+          .tr;
 
   group("Translator class", () {
     late final MockEnv mockEnv;
@@ -33,9 +36,7 @@ void main() {
 
       await translator.translate();
 
-      var baseTranslationFile = File(
-        'lib/locale/translations/base_translations/de.dart',
-      );
+      var baseTranslationFile = File('lib/locale/translations/base_translations/de.dart');
 
       var contentStream = baseTranslationFile.openRead();
       var decoded = await utf8.decodeStream(contentStream);
@@ -44,6 +45,7 @@ void main() {
 
 	//  translator_test.dart
 	'Dusche': 'Dusche',
+	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': 'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um',
 };
 ''';
 
@@ -81,15 +83,14 @@ void main() {
 
 	//  translator_test.dart
 	'Dusche': '--missing translation--',
+	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': '--missing translation--',
 };
 ''';
 
       expect(expectedResult, equals(decoded));
     });
 
-    test(
-        "uses empty old Translations, when translation file contains invalid json",
-        () async {
+    test("uses empty old Translations, when translation file contains invalid json", () async {
       final handler = ArgumentHandler(
         updateDeepLKey: false,
         deleteDeepLKey: false,
@@ -122,6 +123,7 @@ void main() {
 
 	//  translator_test.dart
 	'Dusche': '--missing translation--',
+	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': '--missing translation--',
 };
 ''';
       expect(expectedResult, equals(decoded));
@@ -160,10 +162,7 @@ void main() {
 
         expect(
           filePaths,
-          containsAll([
-            'lib/locale/translations/es.dart',
-            'lib/locale/translations/en.dart'
-          ]),
+          containsAll(['lib/locale/translations/es.dart', 'lib/locale/translations/en.dart']),
         );
       },
     );
@@ -184,9 +183,7 @@ void main() {
       expect(env.deeplAuthKey, equals(''));
     });
 
-    test(
-        'throws DeepLException if both updateDeepLKey and deleteDeepLKey are passed',
-        () async {
+    test('throws DeepLException if both updateDeepLKey and deleteDeepLKey are passed', () async {
       final handler = ArgumentHandler(
         updateDeepLKey: true,
         deleteDeepLKey: true,

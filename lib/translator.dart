@@ -68,16 +68,19 @@ class Translator {
 
         var fileContent = await _readFileContent(fileEntity.path);
 
-        var matchTranslationExtension =
-            RegExp(r"('[^'\\]*(?:\\.[^'\\]*)*'\s*\.tr\b)");
+        var matchTranslationExtension = RegExp(r"('[^'\\]*(?:\\.[^'\\]*)*'\s*\.tr\b)");
         var wordMatches = matchTranslationExtension.allMatches(fileContent);
 
         for (var wordMatch in wordMatches) {
-          var word = wordMatch.group(0)!;
+          var regexWord = wordMatch.group(0)!;
+
+          // looks for the last ' character in the string to remove the .tr and possible
+          // line breaks from the string
+          var word = regexWord.substring(0, regexWord.lastIndexOf('\'') + 1);
 
           if (!allStringsToTranslate.contains(word)) {
             allStringsToTranslate.add(word);
-            translationForSpecificFile.add(_removeLastThreeChars(word));
+            translationForSpecificFile.add(word);
           }
         }
 
@@ -101,8 +104,7 @@ class Translator {
     final completer = Completer<List<FileSystemEntity>>();
     var lister = directory.list(recursive: true);
     lister.listen((file) => files.add(file),
-        onError: (error) => completer.completeError(error),
-        onDone: () => completer.complete(files));
+        onError: (error) => completer.completeError(error), onDone: () => completer.complete(files));
     return completer.future;
   }
 
@@ -116,12 +118,7 @@ class Translator {
     return await utf8.decodeStream(readStream);
   }
 
-  /// Helper function to remove the last 3 chars of a [value].
-  String _removeLastThreeChars(String value) =>
-      value.length > 3 ? value.substring(0, value.length - 3) : value;
-
-  String _basePath(FileSystemEntity fileEntity) =>
-      fileEntity.uri.pathSegments.last;
+  String _basePath(FileSystemEntity fileEntity) => fileEntity.uri.pathSegments.last;
 
   /// Writes all found Strings with the `tr` exentsion [fileNamesWithTranslation] into the base translation file.
   Future<void> _writeTranslationsToBaseFile(
@@ -130,10 +127,8 @@ class Translator {
     stdout.writeln('Updating base translation file...\n');
     final currentDir = Directory.current;
 
-    final translationDir =
-        'lib/locale/translations/base_translations/$defaultLanguage.dart';
-    final baseTranslationFile =
-        await File('${currentDir.path}/$translationDir').create(
+    final translationDir = 'lib/locale/translations/base_translations/$defaultLanguage.dart';
+    final baseTranslationFile = await File('${currentDir.path}/$translationDir').create(
       recursive: true,
     );
 
@@ -197,13 +192,10 @@ class Translator {
   ) async {
     final currentDir = Directory.current;
     final relativeTranslationPath = 'lib/locale/translations/';
-    final translationDir =
-        Directory('${currentDir.path}/$relativeTranslationPath');
+    final translationDir = Directory('${currentDir.path}/$relativeTranslationPath');
     final translationFiles = await _getDirectorysContents(translationDir);
 
-    final filteredFiles = translationFiles
-        .whereType<File>()
-        .where((file) => !file.path.contains('/base_translations'));
+    final filteredFiles = translationFiles.whereType<File>().where((file) => !file.path.contains('/base_translations'));
 
     await Future.forEach(filteredFiles, (File file) async {
       await _updateTranslations(
@@ -235,9 +227,7 @@ class Translator {
     try {
       final json = keysAndValues.split('=')[1].replaceAll(r"'", '"').trim();
       final indexOfLastComma = json.lastIndexOf(',');
-      final validJson = json
-          .replaceFirst(',', '', indexOfLastComma - 1)
-          .substring(0, json.length - 2);
+      final validJson = json.replaceFirst(',', '', indexOfLastComma - 1).substring(0, json.length - 2);
 
       oldTranslations = jsonDecode(validJson) as Map<String, dynamic>;
     } catch (exception) {
@@ -267,8 +257,7 @@ class Translator {
       writeKeyAndValue: (translation, sink) async {
         final oldTranslationKey = translation.replaceAll("'", '');
         final isMissing = !oldTranslations.containsKey(oldTranslationKey) ||
-            oldTranslations.containsKey(oldTranslationKey) &&
-                oldTranslations[oldTranslationKey].isEmpty ||
+            oldTranslations.containsKey(oldTranslationKey) && oldTranslations[oldTranslationKey].isEmpty ||
             oldTranslations[oldTranslationKey] == missingTranslation;
         if (isMissing) missingTranslationCounter++;
 
@@ -283,8 +272,8 @@ class Translator {
     );
 
     stdout.writeln('✅ Done!\n');
-    stdout.writeln(
-        '💡  $missingTranslationCounter missing translation${missingTranslationCounter == 1 ? '' : 's'}\n\n');
+    stdout
+        .writeln('💡  $missingTranslationCounter missing translation${missingTranslationCounter == 1 ? '' : 's'}\n\n');
   }
 
   /// Returns the translation for the given [text] and the [language] in which it should be translated
