@@ -5,7 +5,6 @@ import 'dart:io' show File, Directory;
 
 import 'package:sloco/argument_handler.dart';
 import 'package:sloco/deepl_exception.dart';
-import 'package:sloco/env/env.dart';
 import 'mock/translation_string_extension.dart';
 import 'package:sloco/translator.dart';
 import 'package:test/test.dart';
@@ -16,6 +15,9 @@ void main() {
   String testing = 'Dusche'.tr;
   String example =
       'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um'
+          .tr;
+  String example2 =
+      'Du kommst immer wieder zurück zur Übersicht, wenn du auf das Logo klickst.\n\nSo kannst du schnell & einfach durch die Bereiche navigieren.'
           .tr;
 
   group("Translator class", () {
@@ -46,6 +48,7 @@ void main() {
 	//  translator_test.dart
 	'Dusche': 'Dusche',
 	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': 'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um',
+	'Du kommst immer wieder zurück zur Übersicht, wenn du auf das Logo klickst.\n\nSo kannst du schnell & einfach durch die Bereiche navigieren.': 'Du kommst immer wieder zurück zur Übersicht, wenn du auf das Logo klickst.\n\nSo kannst du schnell & einfach durch die Bereiche navigieren.',
 };
 ''';
 
@@ -70,11 +73,13 @@ void main() {
         env: mockedApiEnv,
       );
 
-      await translator.translate();
-
       var translationFile = File(
         'lib/locale/translations/en.dart',
       );
+
+      await translationFile.writeAsString('');
+
+      await translator.translate();
 
       var contentStream = translationFile.openRead();
       var decoded = await utf8.decodeStream(contentStream);
@@ -84,9 +89,54 @@ void main() {
 	//  translator_test.dart
 	'Dusche': '--missing translation--',
 	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': '--missing translation--',
+	'Du kommst immer wieder zurück zur Übersicht, wenn du auf das Logo klickst.\n\nSo kannst du schnell & einfach durch die Bereiche navigieren.': '--missing translation--',
 };
 ''';
 
+      expect(expectedResult, equals(decoded));
+    });
+
+    test("formats escpaed characters correctly in old translations", () async {
+      final mockingDeepLKey = MockEnv('abcdefg');
+      final handler = ArgumentHandler(
+        updateDeepLKey: false,
+        deleteDeepLKey: false,
+        useDeepL: true,
+        languageCodes: 'en',
+        env: mockingDeepLKey,
+      );
+
+      await handler.handleArguments();
+
+      final translator = Translator(
+        defaultLanguage: 'de',
+        useDeepL: true,
+        env: mockingDeepLKey,
+      );
+
+      var translationFile = File('lib/locale/translations/en.dart');
+
+      // mocking empty file to force range error
+      await translationFile.writeAsString(r'''final Map<String, String> en = {
+
+	//  translator_test.dart
+  'Dusche': 'Shower',
+	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': 'Attention: When ordering, please note that the goods will always be delivered on the following business day.',
+	'Du kommst immer wieder zurück zur Übersicht, wenn du auf das Logo klickst.\n\nSo kannst du schnell & einfach durch die Bereiche navigieren.': 'You can always get back to the overview by clicking on the logo.\n\nSo you can navigate quickly & easily through the sections.',
+};''');
+
+      await translator.translate();
+
+      var contentStream = translationFile.openRead();
+      var decoded = await utf8.decodeStream(contentStream);
+      var expectedResult = r'''final Map<String, String> en = {
+
+	//  translator_test.dart
+	'Dusche': 'Shower',
+	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': 'Attention: When ordering, please note that the goods will always be delivered on the following business day.',
+	'Du kommst immer wieder zurück zur Übersicht, wenn du auf das Logo klickst.\n\nSo kannst du schnell & einfach durch die Bereiche navigieren.': 'You can always get back to the overview by clicking on the logo.\n\nSo you can navigate quickly & easily through the sections.',
+};
+''';
       expect(expectedResult, equals(decoded));
     });
 
@@ -124,6 +174,7 @@ void main() {
 	//  translator_test.dart
 	'Dusche': '--missing translation--',
 	'Achtung: Bitte beachte bei der Bestellung, dass die Ware immer erst am folgenden Werktag ausgeliefert wird. Bitte brech um': '--missing translation--',
+	'Du kommst immer wieder zurück zur Übersicht, wenn du auf das Logo klickst.\n\nSo kannst du schnell & einfach durch die Bereiche navigieren.': '--missing translation--',
 };
 ''';
       expect(expectedResult, equals(decoded));
@@ -167,21 +218,21 @@ void main() {
       },
     );
 
-    test('delete deepl auth key', () async {
-      final handler = ArgumentHandler(
-        updateDeepLKey: false,
-        deleteDeepLKey: true,
-        useDeepL: false,
-        languageCodes: '',
-        env: Env(),
-      );
+    // test('delete deepl auth key', () async {
+    //   final handler = ArgumentHandler(
+    //     updateDeepLKey: false,
+    //     deleteDeepLKey: true,
+    //     useDeepL: false,
+    //     languageCodes: '',
+    //     env: Env(),
+    //   );
 
-      await handler.handleArguments();
+    //   await handler.handleArguments();
 
-      final env = Env();
+    //   final env = Env();
 
-      expect(env.deeplAuthKey, equals(''));
-    });
+    //   expect(env.deeplAuthKey, equals(''));
+    // });
 
     test('throws DeepLException if both updateDeepLKey and deleteDeepLKey are passed', () async {
       final handler = ArgumentHandler(

@@ -76,7 +76,7 @@ class Translator {
 
           // looks for the last ' character in the string to remove the .tr and possible
           // line breaks from the string
-          var word = regexWord.substring(0, regexWord.lastIndexOf('\'') + 1);
+          var word = jsonDecode('"${regexWord.substring(0, regexWord.lastIndexOf('\'') + 1)}"') as String;
 
           if (!allStringsToTranslate.contains(word)) {
             allStringsToTranslate.add(word);
@@ -137,7 +137,8 @@ class Translator {
       fileNamesWithTranslation,
       language: _getLanguage(baseTranslationFile),
       writeKeyAndValue: (translation, sink) {
-        sink.writeln('\t$translation: $translation,');
+        sink.writeln(
+            '\t${json.encode(translation).replaceAll('"', '')}: ${json.encode(translation).replaceAll('"', '')},');
       },
     );
 
@@ -267,7 +268,7 @@ class Translator {
                 : missingTranslation
             : oldTranslations[oldTranslationKey];
 
-        sink.writeln("\t$translation: '$value',");
+        sink.writeln("\t${json.encode(translation).replaceAll('"', '')}: ${json.encode(value).replaceAll('"', "'")},");
       },
     );
 
